@@ -4,6 +4,7 @@ const baseUrl = '/api/'
 const functions = {
 	getShirts: function() {
 		const request = axios.get(baseUrl + 'shirts')
+		console.log('return');
 		return request.then(response => response.data)
 	},
 	getJackets: function() {

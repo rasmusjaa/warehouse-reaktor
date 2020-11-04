@@ -26,6 +26,10 @@ const Footer = () => {
 }
 
 const Product = ({id, name, color, price, manufacturer, availability}) => {
+	let colors = color
+	if(color !== undefined && color.constructor === Array)
+		colors = color.join(', ')
+
 	return (
 		<>
 			<div className="col">
@@ -38,7 +42,7 @@ const Product = ({id, name, color, price, manufacturer, availability}) => {
 			</div>
 			<div className="col">
 				<span className="grid-header-mobile">color:&nbsp;</span>
-				{color.join(', ')}		
+				{colors}		
 			</div>
 			<div className="col">
 				<span className="grid-header-mobile">price:&nbsp;</span>
@@ -62,13 +66,16 @@ const ProductTable = ({ getFunction }) => {
 	const [products, setProducts] = useState([])
 	
 	useEffect(() => {
+		console.log('start');
 			getFunction()
 			.then(initialProducts => {
+				console.log('end1');
 				setProducts(initialProducts)
+				console.log('end');
 			})
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-	console.log(products);
+	if (products.length > 0)
 	return (
 		<div className="grid">
 			<div className="col grid-header">id</div>
@@ -77,9 +84,54 @@ const ProductTable = ({ getFunction }) => {
 			<div className="col grid-header">price</div>
 			<div className="col grid-header">manufacturer</div>
 			<div className="col grid-header">availability</div>
+
+			
 			{products.map((product) =>
-				<Product key={product.id} id={product.id}  name={product.name} color={product.color} price={product.price} manufacturer={product.manufacturer} availability={product.availability}/>
+			<>
+				{/* <div className="col">
+					<span className="grid-header-mobile">id:&nbsp;</span> */}
+					{product.id}				
+				{/* </div>
+				<div className="col">
+					<span className="grid-header-mobile">name:&nbsp;</span> */}
+					{product.name}				
+				{/* </div>
+				<div className="col">
+					<span className="grid-header-mobile">color:&nbsp;</span> */}
+					{product.color}		
+				{/* </div>
+				<div className="col">
+					<span className="grid-header-mobile">price:&nbsp;</span> */}
+					{product.price}				
+				{/* </div>
+				<div className="col">
+					<span className="grid-header-mobile">manufacturer:&nbsp;</span> */}
+					{product.manufacturer}				
+				{/* </div>
+				<div className="col">
+					<span className="grid-header-mobile">availability:&nbsp;</span> */}
+					{product.availability}				
+				{/* </div>
+				<div className="col mobile">
+				</div> */}
+				</>
 			)}
+		</div>
+	)
+
+	return (
+		<div className="grid">
+			<div className="col grid-header">id</div>
+			<div className="col grid-header">name</div>
+			<div className="col grid-header">color</div>
+			<div className="col grid-header">price</div>
+			<div className="col grid-header">manufacturer</div>
+			<div className="col grid-header">availability</div>
+
+			
+			{/* {products.map((product) =>
+				<Product key={product.id} id={product.id}  name={product.name} color={product.color} price={product.price} manufacturer={product.manufacturer} availability={product.availability}/>
+			)} */}
 		</div>
 	)
 }
