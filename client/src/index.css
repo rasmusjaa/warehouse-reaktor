@@ -105,6 +105,12 @@ ul.header li a {
 	}
 }
 
+@media all and (max-width: 600px) {
+	.grid {
+		grid-template-columns: 1fr;
+	}
+}
+
 /* Footer */
 
 .footer {

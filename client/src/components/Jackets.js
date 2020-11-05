@@ -1,11 +1,11 @@
 import React from 'react'
+import ProductTable from './ProductTable'
  
 const Jackets = () => {
 	return (
 	  <div>
-		<h2>Jackets</h2>
- 
-		<p>Duis a turpis sed lacus dapibus elementum sed eu lectus.</p>
+		<h1>Jackets</h1>
+		<ProductTable data={'jackets'} />
 	  </div>
 	)
 }
