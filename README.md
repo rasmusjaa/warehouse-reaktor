@@ -20,6 +20,7 @@ Data is fetched from 2 legacy APIs. First product data for 3 categories from fir
 * Available data amount shown on screen is handled by using responsivity with screen height. Data is shown on 7, 2 or 1 column based on screen width
 * Header line is always on top of data to make it easy to check which column is which
 * Stock data is also shown with color codes in addition to text format to make checking it fast
+* Color data is an array that has been separated to make it clear when product has multiple color options
 * Filtering, search and pagination is not implemented since it was instructed that they are not needed
 
 ## Built With
