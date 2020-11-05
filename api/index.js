@@ -4,59 +4,12 @@ const cors = require('cors')
 const fetch = require('node-fetch');
 
 app.use(cors())
-
 app.use(express.static('build'))
 
-
-let shirts = [
-	{
-		id: "f8016f8e3897cbd129ec0fde",
-		type: "shirts",
-		name: "NYXBE BRIGHT METROPOLIS",
-		color: [
-			"yellow",
-			"pink"
-		],
-		price: 44,
-		manufacturer: "derp"
-	},
-	{
-		id: "a9262d3e27a19f6b9de",
-		type: "shirts",
-		name: "HUNKOX RAIN",
-		color: [
-			"black"
-		],
-		manufacturer: "abiplos"
-	},
-	{
-		id: "1358bf45194ae55f4a251b",
-		type: "shirts",
-		name: "REPBE LIGHT",
-		color: [
-			"green"
-		],
-		price: 21,
-		manufacturer: "nouke"
-	}
-]
-
 const initial = [ { id: "Still fetching data from old API, please refresh" } ]
-
 let jackets = initial
-
-let accessories = [
-	{
-		id: "f8016f8e3897cbd129ec0fde",
-		type: "shirts",
-		name: "NYXBE BRIGHT METROPOLIS",
-		color: [
-			"yellow"
-		],
-		price: 44,
-		manufacturer: "derp"
-	}
-]
+let shirts = initial
+let accessories = initial
 
 const apiUrl = 'https://bad-api-assignment.reaktor.com'
 const headers = {
@@ -66,44 +19,82 @@ const headers = {
 
 async function fetchManufacturerData(param) {
 	console.log('fetching: ' + param);
-	const response = await fetch(apiUrl + param, { method: 'GET', headers: headers })
+	const response = await fetch(apiUrl + '/availability/' + param, { method: 'GET', headers: headers })
 	if (!response.ok)
-	throw new Error(`An error has occured: ${response.status}`)
+		throw new Error(`Trying again because an error has occured: ${response.status}`)
 	const data = await response.json()
 	if (!data || !data.response || data.response.length < 1 || data.response == '[]')
-	throw new Error(`An error has occured: empty data`)
+		throw new Error(`Trying again because an error has occured: empty data`)
 	return data.response
 }
 
 async function fetchProductData(param) {
 	console.log('fetching: ' + param);
-	const response = await fetch(apiUrl + param, { method: 'GET', headers: headers })
+	const response = await fetch(apiUrl + '/products/' + param, { method: 'GET', headers: headers })
 	if (!response.ok)
-	throw new Error(`An error has occured: ${response.status}`)
+		throw new Error(`Trying again because an error has occured: ${response.status}`)
 	const data = await response.json()
 	if (!data || data.length < 1 || data == '[]')
-	throw new Error(`An error has occured: empty data`)
+		throw new Error(`Trying again because an error has occured: empty data`)
 	return data
 }
 
-
-let newJackets
-let newShirts
-let newAccessories
 async function fetchAllData() {
-	newJackets = await fetchProductData('/products/jackets').catch(error => console.log(error.message))
-	newShirts = await fetchProductData('/products/shirts').catch(error => console.log(error.message))
-	newAccessories = await fetchProductData('/products/accessories').catch(error => console.log(error.message))
-	if (newJackets && newShirts && newAccessories ) {
-		const jacketManufacturers = [...new Set(newJackets.map(x => x.manufacturer))]
-		const shirtManufacturers = [...new Set(newShirts.map(x => x.manufacturer))]
-		const accessoryManufacturers = [...new Set(newAccessories.map(x => x.manufacturer))]
-		const manufacturers = [...new Set([...jacketManufacturers, ...shirtManufacturers, ...accessoryManufacturers])]
-		console.log(manufacturers);
-		jackets = newJackets
-		shirts = newShirts
-		accessories = newAccessories
+	let categories = [ 'jackets', 'shirts', 'accessories' ]
+	let categoryData = []
+	let errors = 0
+	for (i = 0; i < categories.length; i++) {
+		categoryData[i] =  await fetchProductData(categories[i]).catch(error => {
+			errors++
+			if (errors > 9) {
+				console.log(`${errors} errors in row, trying again in 5 minutes`)
+				return
+			}
+			console.log(`error count ${errors}. ${error.message}`)
+			i--
+		})
+		if (errors > 9)
+			return
 	}
+	errors = 0
+
+	let allManufacturers = []
+	let manufacturers = []
+	for (i = 0; i < categories.length; i++) {
+		allManufacturers[i] = [...new Set(categoryData[i].map(x => x.manufacturer))]
+		manufacturers.push(...allManufacturers[i])
+	}
+	manufacturers = [...new Set(manufacturers)]
+	
+	let manufacturerData = []
+	for (i = 0; i < manufacturers.length; i++) {
+		manufacturerData[i] =  await fetchManufacturerData(manufacturers[i]).catch(error => {
+			errors++
+			if (errors > 9) {
+				console.log(`${errors} errors in row, trying again in 5 minutes`)
+				return
+			}
+			console.log(`error count ${errors}. ${error.message}`)
+			i--
+		})
+		if (errors > 9)
+			return
+	}
+
+	const regex = 'E>(.*)<\/I'
+	for (i = 0; i < categoryData.length; i++) {
+		console.log('getting category ' + i + ' stocks');
+		for (j = 0; j < categoryData[i].length; j++) {
+			let manindex = manufacturers.indexOf(categoryData[i][j].manufacturer)
+			let stock = manufacturerData[manindex].find(item => item.id === categoryData[i][j].id.toUpperCase())
+			categoryData[i][j].availability = stock.DATAPAYLOAD.match(regex)[1]
+		}
+	}
+	jackets = categoryData[0]
+	shirts = categoryData[1]
+	accessories = categoryData[2]
+
+	console.log('ready');
 }
 
 fetchAllData()
@@ -118,7 +109,6 @@ app.get('/api/shirts', (request, response) => {
 })
 
 app.get('/api/jackets', (request, response) => {
-	console.log('testing');
 	response.json(jackets)
 })
 
