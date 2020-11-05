@@ -21,6 +21,7 @@ Data is fetched from 2 legacy APIs. First product data for 3 categories from fir
 * Header line is always on top of data to make it easy to check which column is which
 * Stock data is also shown with color codes in addition to text format to make checking it fast
 * Color data is an array that has been separated to make it clear when product has multiple color options
+* Product data in back end is kept only in memory instead of database since front end only has to make read calls to get all data at once
 * Filtering, search and pagination is not implemented since it was instructed that they are not needed
 
 ## Built With
