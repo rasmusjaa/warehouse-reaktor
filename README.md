@@ -3,7 +3,7 @@
 
 ![Screen Shot](https://github.com/rasmusjaa/warehouse-reaktor/blob/main/warehouse-screenshot.png)
 
-Assignment for Reaktor junior dev position. Purpose was to create simple UI to show product availability for 3 categories of products, all own their own pages.
+Assignment for Reaktor junior dev position. Purpose was to create simple UI to show product availability for 3 categories of products, all on their own pages.
 
 Data is fetched from 2 legacy APIs. First product data for 3 categories from first API, then getting manufacturers from that data and fetch availability data from manufacturer API. All products are checked against manufacturer data and availability from manufacturer data is added to product data. Data is served to front end in JSON format. Front end displays all data in grid.
 
