@@ -99,10 +99,6 @@ async function fetchAllData() {
 fetchAllData()
 setInterval(fetchAllData, 300000)
 
-app.get('/', (request, response) => {
-	response.send('<h1>Server is running</h1>')
-})
-  
 app.get('/api/shirts', (request, response) => {
 	response.json(shirts)
 })
@@ -114,7 +110,11 @@ app.get('/api/jackets', (request, response) => {
 app.get('/api/accessories', (request, response) => {
 	response.json(accessories)
 })
-  
+
+app.get('*', (request, response) => {
+	response.sendFile(__dirname + '/build/index.html');
+})
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`)
