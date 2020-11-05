@@ -13,7 +13,6 @@ let accessories = initial
 
 const apiUrl = 'https://bad-api-assignment.reaktor.com'
 const headers = {
-//	"x-force-error-mode": "all",
 	"Content-Type": "application/json"
 }
 
@@ -83,7 +82,7 @@ async function fetchAllData() {
 
 	const regex = 'E>(.*)<\/I'
 	for (i = 0; i < categoryData.length; i++) {
-		console.log('getting category ' + i + ' stocks');
+		console.log('combining ' + manufacturers[i] + ' stocks');
 		for (j = 0; j < categoryData[i].length; j++) {
 			let manindex = manufacturers.indexOf(categoryData[i][j].manufacturer)
 			let stock = manufacturerData[manindex].find(item => item.id === categoryData[i][j].id.toUpperCase())
@@ -94,7 +93,7 @@ async function fetchAllData() {
 	shirts = categoryData[1]
 	accessories = categoryData[2]
 
-	console.log('ready');
+	console.log('data from old api loaded');
 }
 
 fetchAllData()

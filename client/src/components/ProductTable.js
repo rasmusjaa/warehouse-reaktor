@@ -40,7 +40,7 @@ const ProductTable = ({ data }) => {
 		return ''
 	
 	const Row = ({ index, style }) => (
-		<div className={`${products[index].availability ? products[index].availability.toLowerCase() : ''} ${index % 2 ? 'list-item-odd grid' : 'list-item-even grid'}`}>
+		<div className={`${products[index].availability ? products[index].availability.toLowerCase() : ''} ${index % 2 ? 'list-item-odd grid' : 'list-item-even grid'}`} style={style}>
 			<div className="col">{index + 1}</div>
 			<div className="col">{products[index].id}</div>
 			<div className="col">{products[index].name}</div>
