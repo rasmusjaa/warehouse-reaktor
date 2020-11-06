@@ -54,6 +54,7 @@ After npm start it takes about 20 seconds until data from legacy APIs is fetched
 You can also run client separately in client dir with npm start and open on http://localhost:3000/ but you need to run back end from api as well if you want to get data.
 
 To show raw json from back end api:
+
 http://localhost:3001/api/jackets
 
 http://localhost:3001/api/shirts
