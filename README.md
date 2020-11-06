@@ -55,5 +55,7 @@ You can also run client separately in client dir with npm start and open on http
 
 To show raw json from back end api:
 http://localhost:3001/api/jackets
+
 http://localhost:3001/api/shirts
+
 http://localhost:3001/api/manufacturers
