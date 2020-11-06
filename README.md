@@ -37,9 +37,9 @@ Data is fetched from 2 legacy APIs. First product data for 3 categories from fir
 
 ## Running project
 
-Live version can be found on [Heroku](https://rj-warehouse.herokuapp.com/)
+Live version can be found on [Heroku](https://rj-warehouse.herokuapp.com/).
 
-To run this project locally:
+To run this project locally first you must have Node installed, then:
 1. Clone the repo
 2. cd repodir/client
 3. npm install
